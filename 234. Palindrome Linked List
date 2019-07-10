@@ -1,0 +1,90 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+//use stack to get reversed list values and compare to list, time o(n), space o(n)
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) {
+        ListNode* temp = head;
+        stack<int> s;
+        
+        while(temp != NULL){
+            s.push(temp->val);
+            temp = temp->next;
+        }
+        
+        while(head != NULL){
+            if(head->val != s.top()) return false;
+            s.pop();
+            head = head->next;
+        }
+        return true;
+    }
+};
+
+//store list values in array and compare beginning of array to end of array, time o(n), space o(n) 
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) {
+        vector<int> vals;
+        ListNode* p = head;
+        while(p != NULL){
+            vals.push_back(p->val);
+            p = p->next;
+        }
+        
+        int length = vals.size();
+        for(int i=0; i<length/2; i++){
+            if(vals[i] != vals[length-i-1]) return false;
+        }
+        return true;
+    }
+};
+
+//reverse second half of linked list and compare to first half, use slow anf fast pointers to find midpoint.
+class Solution {
+public:
+    bool isPalindrome(ListNode* head) {
+        if(head == NULL || head->next == NULL) return true;
+        ListNode* slow = head;
+        ListNode* fast = head;
+        
+        while(fast != NULL && fast->next != NULL){
+            fast = fast->next->next;
+            slow = slow->next;
+        }
+        
+        ListNode* reverse = reverseList(slow);
+        return compareLists(reverse, head);
+    }
+    
+    ListNode* reverseList(ListNode* head){
+        if(head == NULL || head->next == NULL) return head;
+        ListNode* prev = NULL;
+        ListNode* cur = head;
+        ListNode* curNext;
+        
+        while(cur != NULL){
+            curNext = cur->next;
+            cur->next = prev;
+            prev = cur;
+            cur = curNext;
+        }
+        return prev;
+    }
+    
+    bool compareLists(ListNode* reverse, ListNode* head){
+        while(reverse != NULL){
+            if(reverse->val != head->val)
+                return false;
+            reverse = reverse->next;
+            head = head->next;
+        }
+        return true;
+    }
+};
