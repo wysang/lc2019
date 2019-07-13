@@ -19,4 +19,23 @@ public:
     }
 };
 
-//iterative
+//iterative, add dummy head, change two nodes iteratively with three pointers: pre, first and second
+class Solution {
+public:
+    ListNode* swapPairs(ListNode* head) {
+        ListNode* dummy = new ListNode(0);
+        dummy->next = head;
+        ListNode* pre = dummy;
+        
+        
+        while(pre->next != NULL && pre->next->next != NULL){
+            ListNode* first = pre->next;
+            ListNode* second = pre->next->next;
+            pre->next = second;
+            first->next = second->next;
+            second->next = first;
+            pre = first;
+        }
+        return dummy->next;
+    }
+};
